@@ -1,0 +1,116 @@
+VERSION: 2
+DOMAIN_ADAPTATION:
+  DA_ACCUSE_WEIGHT: 0.1
+  STU_DISC_WEIGHT: 1.0
+  ACS_WEIGHT_ROIFEAT: 1.0
+  ACS_WEIGHT_VISFEAT: 1.0
+  ACS_WEIGHT_AMOFEAT: 1.0
+  ACS_WEIGHT_VISOUT: 1.0
+  ACS_WEIGHT_AMOOUT: 1.0
+  LRN_WEIGHT_VISFEAT: 1.0
+  LRN_WEIGHT_AMOFEAT: 1.0
+  LRN_WEIGHT_VISOUT: 1.0
+  LRN_WEIGHT_AMOOUT: 1.0
+  FG_BATCH_MAX: 20
+  USE_RESNET: True
+  STUDENT_DROPOUT: 0.0
+  STUDENT_HARD_MASK: False
+  STUDENT_BCE_ON_MASK: False
+  STUDENT_DISC_ON_GT_OUTMASK: False
+  STUDENT_CONFIG:
+    SOLVER:
+      BASE_LR: 0.00015
+      MAX_ITER: 90002
+      STEPS: (90000, 90001)
+      WARMUP_ITERS: 0
+  TARGET_DATASET_CONFIG:
+    DATASETS:
+      TRAIN: ("OSD_train",)
+      TEST: ("OSD_val",)
+    INPUT:
+      DEPTH_RANGE: [250, 1500]
+      PERLIN_DISTORTION: False
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN_FeatureOutput"
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  BACKBONE:
+    NAME: "build_resnet_rgbd_latefusion_fpn_backbone"
+  RGBD_FUSION: "late"
+  FUSE_TYPE: "conv"
+  PIXEL_MEAN: [103.530, 116.280, 123.675, 127.5, 127.5, 127.5]
+  PIXEL_STD: [1, 1, 1, 1, 1, 1]
+  RESNETS:
+    OUT_FEATURES: ["res2", "res3", "res4", "res5"]
+    DEPTH: 50
+  FPN:
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+  ANCHOR_GENERATOR:
+    SIZES: [[16], [32], [64], [128], [256]]  # One size for each in feature map
+    ASPECT_RATIOS: [[0.5, 1.0, 2.0]]  # Three aspect ratios (same for all in feature maps)
+  PROPOSAL_GENERATOR: 
+    NAME: 'RPN_FeatureOutput'
+  RPN:
+    HEAD_NAME: 'StandardRPNHead_FeatureOutput'
+    IN_FEATURES: ["p2", "p3", "p4", "p5", "p6"]
+    PRE_NMS_TOPK_TRAIN: 2000  # Per FPN level
+    PRE_NMS_TOPK_TEST: 1000  # Per FPN level
+    POST_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TEST: 1000
+  ROI_HEADS:
+    NAME: "ORCNNROIHeads"
+    IN_FEATURES: ["p2", "p3", "p4", "p5"]
+    NUM_CLASSES: 1
+  ROI_BOX_HEAD:
+    NAME: "MLCFastRCNNConvFCHead"
+    NUM_FC: 0
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 7
+    CLS_AGNOSTIC_BBOX_REG: True
+  ROI_MASK_HEAD:
+    NAME: "AmodalMaskRCNNConvUpsampleHead"
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+  ROI_VISIBLE_MASK_HEAD:
+    NAME: "VisibleMaskRCNNConvUpsampleHead"
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+  BOXINST:
+    ENABLED: False
+  MASK_ON: True
+  OCC_CLS_AT_BOX: False
+  MULTI_LEVEL_CODING: True
+  OCC_CLS_AT_MASK: True
+  HIERARCHCIAL_OCCLUSION_MODELING: True
+  PREDICTION_ORDER: ["V", "A", "O"]
+  GUIDANCE_TYPE: "concat"
+
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.00125
+  STEPS: (60000, 80000)
+  MAX_ITER: 90000
+  WARMUP_ITERS: 5000
+  CHECKPOINT_PERIOD: 10000
+  CLIP_GRADIENTS:
+    ENABLED: True
+  VERBOSE_PERIOD: 20
+DATASETS:
+  TRAIN: ("uoais_sim_train_amodal",)
+  TEST: ("uoais_sim_val_amodal",)
+    
+TEST:
+  EVAL_PERIOD: 90000 # no evaluation if 0
+  EVAL_TARGET: ["amodal_visible"]
+
+INPUT:
+  MASK_FORMAT: "rle"
+  IMG_SIZE: (640, 480)
+  COLOR_AUGMENTATION: True
+  PERLIN_DISTORTION: True
+  CROP_RATIO: 0.5
+  AMODAL: True 
+  DEPTH: True 
+  DEPTH_RANGE: [2500, 15000]
+
+OUTPUT_DIR: "output/DA_train_v2"
+SEED: 7

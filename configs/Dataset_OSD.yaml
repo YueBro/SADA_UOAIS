@@ -1,0 +1,9 @@
+DATASETS:
+  DO_INPAINT: True
+  TRAIN: ("OSD_train",)
+  TEST: ("OSD_val",)
+INPUT:
+  DEPTH_RANGE: [250, 1500]
+  PERLIN_DISTORTION: True
+VERSION: 2
+
