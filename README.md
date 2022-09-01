@@ -4,12 +4,12 @@
 
 ```
 # Clone project
-git clone https://github.com/YueBro/SADA_UOAIS
-cd SADA_UOAIS
+git clone https://github.com/YueBro/sada_uoais
+cd sada_uoais
 
 # Create virtual environment
-python3 -m venv sada_uoais
-source sada_uoais/bin/activate
+python3 -m venv sada_env
+source sada_env/bin/activate
 
 # Install pytorch 1.8.1 for cuda 10.2 and some other modules
 pip install torch==1.8.1+cu102 torchvision==0.9.1+cu102 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
@@ -100,7 +100,7 @@ python mycode/evaluation/evaluation.py --dataset-name osd --use-cgnet
 python mycode/train/train_net_SADA.py
 ```
 
-## Investigate Architecture
+## Inspect Architecture
 
 ### Config File
 
