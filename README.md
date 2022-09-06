@@ -26,17 +26,17 @@ python setup.py build develop
 
 ## Download model checkpoint
 
-Download at [GDrive](https://drive.google.com/file/d/10JpK7RmkGrTqw3X9WLUVLVQSOX0dSu87/view?usp=sharing). Create folders as `output/eval_model` and place the checkpoint into the folder.
+Download at [GDrive](https://drive.google.com/file/d/10JpK7RmkGrTqw3X9WLUVLVQSOX0dSu87/view?usp=sharing) [1]. Create folders as `output/eval_model` and place the checkpoint into the folder.
 
 
 ## Download CG-Net
 
-Download at [GDrive](https://drive.google.com/file/d/1-YmmckaLXSZGh9BJkzWXdabNkIeXYh2j/view?usp=sharing). Place the checkpoint into `foreground_segmentation`.
+Download at [GDrive](https://drive.google.com/file/d/1-YmmckaLXSZGh9BJkzWXdabNkIeXYh2j/view?usp=sharing) [1]. Place the checkpoint into `foreground_segmentation`.
 
 
 ## Download Datasets
 
-### Download OSD
+### Download OSD [2]
 ```
 # OSD dataset
 wget https://data.acin.tuwien.ac.at/index.php/s/EpX1yej4NShzVtH/download
@@ -45,9 +45,9 @@ rm download
 mv OSD-0.2-depth datasets/OSD-0.2-depth
 ```
 
-Download amodal annotation at [GDrive](https://drive.google.com/file/d/1ddS721aO1q2wr88gc5ndSOYqYApqmLPe/view?usp=sharing) and unzip into `datasets/OSD-0.2-depth`.
+Download amodal annotation at [GDrive](https://drive.google.com/file/d/1ddS721aO1q2wr88gc5ndSOYqYApqmLPe/view?usp=sharing) [1] and unzip into `datasets/OSD-0.2-depth`.
 
-### Download UOAIS-Sim
+### Download UOAIS-Sim [1]
 
 Download at [GDrive](https://drive.google.com/file/d/1yN6ixntOxQRx-UFPV9-wi9R7iODJh-Nw/view?usp=sharing). Create folder `datasets/UOAIS-Sim` and unzip into the folder.
 
@@ -106,7 +106,7 @@ python mycode/train/train_net_SADA.py
 
 `configs/DA_SADA.yaml`
 
-### UOAIS-Net Teacher Model
+### UOAIS-Net Teacher Model [1]
 
 Meta architecture: `GeneralizedRCNN_FeatureOutput` in `adet/modeling/domain_shift_modules/meta_arch.py`
 
@@ -118,3 +118,9 @@ HOM heads: `ORCNNROIHeads` in `adet/modeling/rcnn/rcnn_heads.py`
 
 `StudentAccusingDiscriminator` in `adet/modeling/domain_shift_modules/disc_for_rcnn.py`
 
+
+### Reference
+
+[1] S. Back, J. Lee, T. Kim, S. Noh, R. Kang, S. Bak, and K. Lee, “Unseen object amodal instance segmentation via hierarchical occlusion modeling,” 2021.
+
+[2] A. Richtsfeld, T. M¨orwald, J. Prankl, M. Zillich, and M. Vincze, “Segmentation of unknown objects in indoor environments,” in 2012 IEEE/RSJ International Conference on Intelligent Robots and Systems, 2012, pp. 4791–4796.
